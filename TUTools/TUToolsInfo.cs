@@ -2,7 +2,7 @@
 using System.Drawing;
 using Grasshopper.Kernel;
 
-namespace TUDTools
+namespace TUTools
 {
     public class TUToolsInfo : GH_AssemblyInfo
     {
@@ -18,7 +18,7 @@ namespace TUDTools
             get
             {
                 //Return a 24x24 pixel bitmap to represent this GHA library.
-                return null;
+                return Resources.Main;
             }
         }
         public override string Description

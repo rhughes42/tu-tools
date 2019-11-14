@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
+using static TUTools.Properties.Settings;
+
 namespace TUTools.CNC
 {
     public class Program : GH_Component
@@ -31,30 +33,46 @@ namespace TUTools.CNC
             List<string> code = new List<string>();
             if (!DA.GetDataList(0, code)) return;
 
+            bool loginValid = false;
+
             // Program
             List<string> prog = new List<string>();
 
-            prog.Add(@"( Grasshopper CNC Test )");
-            prog.Add(@"( Created: " + DateTime.Now.ToShortTimeString() + ")");
-            prog.Add(@"N100G00G21G17G90G40G49G80");
-            prog.Add(@"N110G71G91.1");
-            prog.Add(@"N120T1M06");
-            prog.Add(@"N130G00G43Z50.000H1");
-            prog.Add(@"N140S12000M03");
-            prog.Add(@"N150G94");
-            prog.Add(@"N160X0.000Y0.000F2400.0");
-
-            for (int i = 0; i < code.Count; i++)
+            // Check the license status
+            this.Message = "OK";
+            if (Default.ValidTo.CompareTo(DateTime.Now) <= 0)
             {
-                prog.Add("N" + ((17 + i) * 10).ToString() + code[i]);
+                Default.LoggedIn = false;
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Log in to Axis to use this feature.");
+                this.Message = "Timed Out";
             }
+            else loginValid = true;
 
-            // Hardcoded 50mm vertical set.
-            prog.Add("N" + ((17 + code.Count) * 10).ToString() + "G00Z50.000");
-            prog.Add("N" + ((17 + code.Count + 1) * 10).ToString() + "G00X0.000Y0.000");
-            prog.Add("N" + ((17 + code.Count + 2) * 10).ToString() + "M09");
-            prog.Add("N" + ((17 + code.Count + 3) * 10).ToString() + "M30");
-            prog.Add("%");
+            if (loginValid)
+            {
+                prog.Add(@"( Grasshopper CNC Test )");
+                prog.Add(@"( Toolpath Created: " + DateTime.Now.ToShortTimeString() + " )");
+                prog.Add("( --- )");
+                prog.Add(@"N100G00G21G17G90G40G49G80");
+                prog.Add(@"N110G71G91.1");
+                prog.Add(@"N120T1M06");
+                prog.Add(@"N130G00G43Z50.000H1");
+                prog.Add(@"N140S12000M03");
+                prog.Add(@"N150G94");
+                prog.Add(@"N160X0.000Y0.000F2400.0");
+
+                for (int i = 0; i < code.Count; i++)
+                {
+                    prog.Add("N" + ((17 + i) * 10).ToString() + code[i]);
+                }
+
+                // Hardcoded 50mm vertical set.
+                prog.Add("N" + ((17 + code.Count) * 10).ToString() + "G00Z50.000");
+                prog.Add("N" + ((17 + code.Count + 1) * 10).ToString() + "G00X0.000Y0.000");
+                prog.Add("N" + ((17 + code.Count + 2) * 10).ToString() + "M09");
+                prog.Add("N" + ((17 + code.Count + 3) * 10).ToString() + "M30");
+                prog.Add("%");
+            }           
 
             // Output Data
             DA.SetDataList(0, prog);
