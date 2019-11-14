@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TUTools")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("TU Tools")]
+[assembly: AssemblyDescription("Fabrication tools for Technical University Dublin by Axis Consulting.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TUTools")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany("Axis Consulting")]
+[assembly: AssemblyProduct("TU Tools")]
+[assembly: AssemblyCopyright("Copyright Axis © 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("dba50a3f-19e1-4df7-981e-c0c26a47dcc5")]
+[assembly: Guid("c1b4dfa4-f085-40a9-872b-6972eda25cc2")]
 
 // Version information for an assembly consists of the following four values:
 //

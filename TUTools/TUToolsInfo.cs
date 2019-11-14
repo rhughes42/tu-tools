@@ -2,7 +2,7 @@
 using System.Drawing;
 using Grasshopper.Kernel;
 
-namespace TUTools
+namespace TUDTools
 {
     public class TUToolsInfo : GH_AssemblyInfo
     {
@@ -26,14 +26,14 @@ namespace TUTools
             get
             {
                 //Return a short string describing the purpose of this GHA library.
-                return "";
+                return "Fabrication tools for Technical University Dublin by Axis Consulting.";
             }
         }
         public override Guid Id
         {
             get
             {
-                return new Guid("d939a801-4782-40b9-951a-e4fe3a04889f");
+                return new Guid("8dc6e4ce-f6fe-46b2-9fe1-28a56ed9edfd");
             }
         }
 
@@ -42,7 +42,7 @@ namespace TUTools
             get
             {
                 //Return a string identifying you or your company.
-                return "";
+                return "Axis Consulting";
             }
         }
         public override string AuthorContact
@@ -50,7 +50,7 @@ namespace TUTools
             get
             {
                 //Return a string representing your preferred contact details.
-                return "";
+                return "rhu@axisarch.tech";
             }
         }
     }
