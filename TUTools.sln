@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TUTools", "TUTools\TUTools.csproj", "{DBA50A3F-19E1-4DF7-981E-C0C26A47DCC5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBA50A3F-19E1-4DF7-981E-C0C26A47DCC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBA50A3F-19E1-4DF7-981E-C0C26A47DCC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBA50A3F-19E1-4DF7-981E-C0C26A47DCC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBA50A3F-19E1-4DF7-981E-C0C26A47DCC5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {81B5BA14-12FE-425A-88BD-40D34DC3BF97}
+	EndGlobalSection
+EndGlobal
