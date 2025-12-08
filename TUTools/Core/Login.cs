@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 
 using Auth0.OidcClient;
 using static TUTools.Properties.Settings;
-using System.Diagnostics;
 
 namespace TUTools.Core
 {

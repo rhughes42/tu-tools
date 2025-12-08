@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 
 using static TUTools.Properties.Settings;
 
