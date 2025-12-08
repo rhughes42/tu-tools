@@ -10,11 +10,50 @@ using System.Diagnostics;
 
 namespace TUTools.Core
 {
+    /// <summary>
+    /// Grasshopper component that handles user authentication for TU Tools using Auth0.
+    /// Requires a DIT email address for login and provides a 3-day authentication token.
+    /// </summary>
     public class Login : GH_Component
     {
+        /// <summary>
+        /// Duration in days that the login token remains valid.
+        /// </summary>
+        private const int TokenValidityDays = 3;
+
+        /// <summary>
+        /// Auth0 domain for authentication.
+        /// </summary>
+        private const string Auth0Domain = "axisarch.eu.auth0.com";
+
+        /// <summary>
+        /// Auth0 client ID for this application.
+        /// </summary>
+        private const string Auth0ClientId = "7xAlz55NWm8pl2ZAEvEXsh4UtRpm8fuq";
+
+        /// <summary>
+        /// Width of the authentication browser window.
+        /// </summary>
+        private const int BrowserWidth = 640;
+
+        /// <summary>
+        /// Height of the authentication browser window.
+        /// </summary>
+        private const int BrowserHeight = 400;
+
+        /// <summary>
+        /// Log of authentication operations.
+        /// </summary>
         public List<string> log = new List<string>();
+
+        /// <summary>
+        /// Current login state.
+        /// </summary>
         public bool loggedIn = false;
 
+        /// <summary>
+        /// Initializes a new instance of the Login component.
+        /// </summary>
         public Login()
           : base("Login", "Login",
               "Login to TU Tools using a DIT email address.",
@@ -22,28 +61,40 @@ namespace TUTools.Core
         {
         }
 
+        /// <summary>
+        /// Registers all input parameters for this component.
+        /// </summary>
+        /// <param name="pManager">Use this object to register input parameters.</param>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddBooleanParameter("Run", "Run", "Run the login application.", GH_ParamAccess.item);
         }
 
+        /// <summary>
+        /// Registers all output parameters for this component.
+        /// </summary>
+        /// <param name="pManager">Use this object to register output parameters.</param>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("Log", "Log", "Information log.", GH_ParamAccess.list);
         }
 
+        /// <summary>
+        /// Solves the component instance and handles authentication operations.
+        /// </summary>
+        /// <param name="DA">The DA object can be used to retrieve data from input parameters and to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             bool run = false;
 
             if (!DA.GetData(0, ref run)) return;
 
-            // Set up our client to handle the login.
+            // Set up our client to handle the login
             Auth0ClientOptions clientOptions = new Auth0ClientOptions
             {
-                Domain = "axisarch.eu.auth0.com",
-                ClientId = "7xAlz55NWm8pl2ZAEvEXsh4UtRpm8fuq",
-                Browser = new WebBrowserBrowser("Authenticating...", 400, 640)
+                Domain = Auth0Domain,
+                ClientId = Auth0ClientId,
+                Browser = new WebBrowserBrowser("Authenticating...", BrowserHeight, BrowserWidth)
             };
 
             // Initiate the client
@@ -55,16 +106,16 @@ namespace TUTools.Core
                 {"response_type", "code"}
             };
 
-            // Handle the logout.
+            // Handle the logout
             if (loggedIn && !run)
             {
                 client.LogoutAsync();
                 loggedIn = false;
                 this.Message = "Logged Out";
-                log.Add("Logged out of Axis at " + System.DateTime.Now.ToShortDateString());
+                log.Add("Logged out of Axis at " + DateTime.Now.ToShortDateString());
             }
 
-            // Handle the login.
+            // Handle the login
             if (!loggedIn && run)
             {
                 client.LoginAsync(extra).ContinueWith(t =>
@@ -75,10 +126,10 @@ namespace TUTools.Core
                         log.Clear();
 
                         log.Add("Logged in to Axis at " + DateTime.Now.ToShortTimeString());
-                        DateTime validTo = DateTime.Now.AddDays(3);
+                        DateTime validTo = DateTime.Now.AddDays(TokenValidityDays);
                         log.Add("Login valid to: " + validTo.ToLongDateString() + ", " + validTo.ToShortTimeString());
 
-                        // Update our login time.
+                        // Update our login time
                         Default.ValidTo = validTo;
                         this.Message = "Logged In";
                         loggedIn = true;
@@ -97,16 +148,20 @@ namespace TUTools.Core
             DA.SetDataList(0, log);
         }
 
+        /// <summary>
+        /// Gets the icon for this component.
+        /// </summary>
         protected override System.Drawing.Bitmap Icon
         {
             get
             {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
                 return Resources.Login;
             }
         }
 
+        /// <summary>
+        /// Gets the unique ID for this component.
+        /// </summary>
         public override Guid ComponentGuid
         {
             get { return new Guid("e3f4b1a8-439b-4d40-80ec-dfb5ee1452fc"); }
