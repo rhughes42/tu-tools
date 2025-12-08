@@ -9,8 +9,11 @@ TU Tools is a Grasshopper plugin that provides CNC machining capabilities for Rh
 ## Features
 
 - **CNC Toolpath Generation**: Convert points into G-code cutting commands
+- **Arc Interpolation**: Generate smooth curved toolpaths using G02/G03 commands
 - **Program Compilation**: Compile individual operations into complete CNC programs
 - **File Export**: Export programs to Axiom machine file format (.mmg)
+- **Toolpath Validation**: Analyze and detect potential issues in toolpaths
+- **Visual Preview**: Color-coded visualization of cutting and rapid movements
 - **Authentication**: Secure login system using Auth0 with 3-day token validity
 - **Utility Functions**: Helper methods for geometry operations and plane interpolation
 
@@ -22,7 +25,11 @@ TU Tools is a Grasshopper plugin that provides CNC machining capabilities for Rh
 ### CNC
 - **Cut**: Generate G-code cutting commands from a list of points
   - Input: List of points, feed speed (mm/s)
-  - Output: G-code commands
+  - Output: G-code commands (G01)
+  
+- **Arc Cut**: Generate G-code arc commands for smoother curved toolpaths
+  - Input: List of circular arcs/circles, feed speed (mm/s), direction (CW/CCW)
+  - Output: G-code arc commands (G02/G03)
   
 - **File**: Compile individual CNC operations into a complete program
   - Input: List of cut commands
@@ -31,6 +38,16 @@ TU Tools is a Grasshopper plugin that provides CNC machining capabilities for Rh
 - **Export**: Export compiled programs to machine files
   - Input: Program commands, filename, filepath, export trigger
   - Output: .mmg file with export log
+
+- **Validate Toolpath**: Analyze toolpaths for potential issues
+  - Input: Toolpath points, rapid threshold, safe height
+  - Output: Validation status, issue list, statistics
+  - Checks: Rapid movements, path continuity, negative Z values
+  
+- **G-Code Preview**: Visualize toolpaths with color-coded movements
+  - Input: Toolpath points, rapid threshold
+  - Output: Cutting moves (green), rapid moves (red), statistics
+  - Features: Visual preview, time estimation, workspace dimensions
 
 ## Installation
 
@@ -104,6 +121,18 @@ TU Tools is a Grasshopper plugin that provides CNC machining capabilities for Rh
 Points → Cut → File → Export → .mmg file
          ↓
       Speed (optional)
+
+Arcs → Arc Cut → File → Export → .mmg file
+       ↓
+    Speed, Direction
+
+Points → Validate → Issues, Statistics
+         ↓
+      Thresholds
+
+Points → G-Code Preview → Visual toolpath, Time estimate
+         ↓
+      Display settings
 ```
 
 ## Code Structure
@@ -111,17 +140,20 @@ Points → Cut → File → Export → .mmg file
 ```
 TUTools/
 ├── CNC/
-│   ├── Cut.cs          # Toolpath generation
-│   ├── Program.cs      # Program compilation
-│   └── Export.cs       # File export
+│   ├── ArcCut.cs           # Arc interpolation for curves
+│   ├── Cut.cs              # Linear toolpath generation
+│   ├── Export.cs           # File export
+│   ├── GCodePreview.cs     # Visual toolpath preview
+│   ├── Program.cs          # Program compilation
+│   └── ToolpathValidator.cs # Toolpath validation
 ├── Core/
-│   └── Login.cs        # Authentication
+│   └── Login.cs            # Authentication
 ├── Properties/
 │   ├── AssemblyInfo.cs
 │   └── Settings.Designer.cs
-├── Resources/          # Icons and assets
-├── Utilities.cs        # Helper functions
-└── TUToolsInfo.cs     # Plugin metadata
+├── Resources/              # Icons and assets
+├── Utilities.cs            # Helper functions
+└── TUToolsInfo.cs         # Plugin metadata
 ```
 
 ## Development
@@ -146,18 +178,26 @@ TUTools/
 
 The generated G-code follows standard CNC conventions:
 
-- **G00**: Rapid positioning
-- **G01**: Linear interpolation (cutting)
+- **G00**: Rapid positioning (non-cutting movement)
+- **G01**: Linear interpolation (cutting movement)
+- **G02**: Circular interpolation clockwise (arc cutting)
+- **G03**: Circular interpolation counterclockwise (arc cutting)
 - **G21**: Metric units (mm)
 - **G90**: Absolute positioning mode
 - **M03**: Spindle on (clockwise)
 - **M09**: Coolant off
 - **M30**: Program end
 
+Arc commands use IJK format for center offsets:
+- **I**: X-axis offset from start point to arc center
+- **J**: Y-axis offset from start point to arc center
+- **K**: Z-axis offset from start point to arc center
+
 Default machine settings:
 - Spindle speed: 12000 RPM
 - Safe height: 50mm
 - Feed rate: 2400 mm/min (for rapid moves)
+- Default cutting speed: 40 mm/s (2400 mm/min)
 
 ## License
 
