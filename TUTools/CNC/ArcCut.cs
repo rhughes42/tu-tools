@@ -27,6 +27,11 @@ namespace TUTools.CNC
         private const int CoordinatePrecision = 3;
 
         /// <summary>
+        /// Default tolerance for arc/circle detection (in mm).
+        /// </summary>
+        private const double DefaultTolerance = 0.001;
+
+        /// <summary>
         /// Initializes a new instance of the ArcCut component.
         /// </summary>
         public ArcCut()
@@ -99,11 +104,14 @@ namespace TUTools.CNC
             {
                 Curve arc = arcs[i];
 
+                // Get tolerance from active document, or use default if not available
+                double tolerance = Rhino.RhinoDoc.ActiveDoc?.ModelAbsoluteTolerance ?? DefaultTolerance;
+
                 // Try to convert to arc or circle
-                if (!arc.TryGetArc(out Arc rhinoArc, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance))
+                if (!arc.TryGetArc(out Arc rhinoArc, tolerance))
                 {
                     // If not an arc, try circle
-                    if (!arc.TryGetCircle(out Circle circle, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance))
+                    if (!arc.TryGetCircle(out Circle circle, tolerance))
                     {
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, 
                             $"Curve at index {i} is not a circular arc or circle. Skipping.");

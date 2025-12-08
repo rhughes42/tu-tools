@@ -75,7 +75,7 @@ namespace TUTools.Core
         /// <param name="pManager">Use this object to register output parameters.</param>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Log", "Log", "Information log.", GH_ParamAccess.list);
+            pManager.AddTextParameter("Log", "Log", "Authentication log.", GH_ParamAccess.list);
         }
 
         /// <summary>

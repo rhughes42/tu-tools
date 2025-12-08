@@ -33,6 +33,22 @@ namespace TUTools.CNC
         private const double RapidThreshold = 30.0;
 
         /// <summary>
+        /// Default average feed rate for time estimation (mm/s).
+        /// </summary>
+        private const double DefaultFeedRate = 40.0;
+
+        /// <summary>
+        /// Speed multiplier for rapid movements.
+        /// </summary>
+        private const double RapidSpeedMultiplier = 3.0;
+
+        /// <summary>
+        /// Cached toolpath data to avoid recomputation on every redraw.
+        /// </summary>
+        private List<Point3d> _cachedToolpath = null;
+        private int _cachedDataVersion = -1;
+
+        /// <summary>
         /// Initializes a new instance of the GCodePreview component.
         /// </summary>
         public GCodePreview()
@@ -154,14 +170,13 @@ namespace TUTools.CNC
             statistics.Add($"");
             statistics.Add($"Z Range: {bbox.Min.Z:F3} to {bbox.Max.Z:F3} mm");
 
-            // Estimate cutting time (assuming average feed rate)
-            double avgFeedRate = 40.0; // mm/s
-            double cuttingTime = totalCuttingDistance / avgFeedRate;
-            double rapidTime = totalRapidDistance / (avgFeedRate * 3); // Rapids are typically 3x faster
+            // Estimate cutting time
+            double cuttingTime = totalCuttingDistance / DefaultFeedRate;
+            double rapidTime = totalRapidDistance / (DefaultFeedRate * RapidSpeedMultiplier);
             double totalTime = cuttingTime + rapidTime;
 
             statistics.Add($"");
-            statistics.Add($"Estimated Time (at {avgFeedRate} mm/s feed):");
+            statistics.Add($"Estimated Time (at {DefaultFeedRate} mm/s feed):");
             statistics.Add($"  Cutting: {FormatTime(cuttingTime)}");
             statistics.Add($"  Rapids: {FormatTime(rapidTime)}");
             statistics.Add($"  Total: {FormatTime(totalTime)}");
@@ -211,16 +226,22 @@ namespace TUTools.CNC
             if (toolpathParam.VolatileDataCount == 0)
                 return;
 
-            List<Point3d> toolpath = new List<Point3d>();
-            foreach (var data in toolpathParam.VolatileData.AllData(true))
+            // Check if we need to update cached data
+            int currentVersion = toolpathParam.VolatileData.DataCount;
+            if (_cachedToolpath == null || _cachedDataVersion != currentVersion)
             {
-                if (data is Grasshopper.Kernel.Types.GH_Point ghPoint)
+                _cachedToolpath = new List<Point3d>();
+                foreach (var data in toolpathParam.VolatileData.AllData(true))
                 {
-                    toolpath.Add(ghPoint.Value);
+                    if (data is Grasshopper.Kernel.Types.GH_Point ghPoint)
+                    {
+                        _cachedToolpath.Add(ghPoint.Value);
+                    }
                 }
+                _cachedDataVersion = currentVersion;
             }
 
-            if (toolpath.Count < 2)
+            if (_cachedToolpath.Count < 2)
                 return;
 
             double rapidThreshold = RapidThreshold;
@@ -234,10 +255,10 @@ namespace TUTools.CNC
             }
 
             // Draw colored lines
-            for (int i = 1; i < toolpath.Count; i++)
+            for (int i = 1; i < _cachedToolpath.Count; i++)
             {
-                Point3d start = toolpath[i - 1];
-                Point3d end = toolpath[i];
+                Point3d start = _cachedToolpath[i - 1];
+                Point3d end = _cachedToolpath[i];
                 double distance = start.DistanceTo(end);
 
                 Color lineColor = distance > rapidThreshold ? RapidColor : CuttingColor;
@@ -245,10 +266,10 @@ namespace TUTools.CNC
             }
 
             // Draw start and end markers
-            if (toolpath.Count > 0)
+            if (_cachedToolpath.Count > 0)
             {
-                args.Display.DrawPoint(toolpath[0], Rhino.Display.PointStyle.X, 10, Color.Blue);
-                args.Display.DrawPoint(toolpath[toolpath.Count - 1], Rhino.Display.PointStyle.Circle, 10, Color.Red);
+                args.Display.DrawPoint(_cachedToolpath[0], Rhino.Display.PointStyle.X, 10, Color.Blue);
+                args.Display.DrawPoint(_cachedToolpath[_cachedToolpath.Count - 1], Rhino.Display.PointStyle.Circle, 10, Color.Red);
             }
         }
 

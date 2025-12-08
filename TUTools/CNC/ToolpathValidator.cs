@@ -150,20 +150,31 @@ namespace TUTools.CNC
             }
 
             // Check for negative Z values (below work surface)
-            var negativeZPoints = toolpath.Select((p, idx) => new { Point = p, Index = idx })
-                                          .Where(x => x.Point.Z < 0)
-                                          .ToList();
+            int negativeZCount = 0;
+            var negativeZSamples = new List<(Point3d Point, int Index)>();
 
-            if (negativeZPoints.Any())
+            for (int i = 0; i < toolpath.Count; i++)
             {
-                issues.Add($"Warning: {negativeZPoints.Count} points with negative Z values (below work surface).");
-                foreach (var item in negativeZPoints.Take(5)) // Report first 5
+                if (toolpath[i].Z < 0)
+                {
+                    negativeZCount++;
+                    if (negativeZSamples.Count < 5)
+                    {
+                        negativeZSamples.Add((toolpath[i], i));
+                    }
+                }
+            }
+
+            if (negativeZCount > 0)
+            {
+                issues.Add($"Warning: {negativeZCount} points with negative Z values (below work surface).");
+                foreach (var item in negativeZSamples)
                 {
                     issues.Add($"  - Index {item.Index}: Z = {item.Point.Z:F3}");
                 }
-                if (negativeZPoints.Count > 5)
+                if (negativeZCount > 5)
                 {
-                    issues.Add($"  - ...and {negativeZPoints.Count - 5} more");
+                    issues.Add($"  - ...and {negativeZCount - 5} more");
                 }
             }
 
