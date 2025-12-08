@@ -154,9 +154,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CNC\ArcCut.cs" />
     <Compile Include="CNC\Cut.cs" />
     <Compile Include="CNC\Export.cs" />
+    <Compile Include="CNC\GCodePreview.cs" />
     <Compile Include="CNC\Program.cs" />
+    <Compile Include="CNC\ToolpathValidator.cs" />
     <Compile Include="Core\Login.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
