@@ -158,6 +158,7 @@
     <Compile Include="CNC\Cut.cs" />
     <Compile Include="CNC\Export.cs" />
     <Compile Include="CNC\GCodePreview.cs" />
+    <Compile Include="CNC\OptimizeToolpath.cs" />
     <Compile Include="CNC\Program.cs" />
     <Compile Include="CNC\ToolpathValidator.cs" />
     <Compile Include="Core\Login.cs" />

@@ -16,6 +16,7 @@ TU Tools is a Grasshopper plugin that provides CNC machining capabilities for Rh
 - **Visual Preview**: Color-coded visualization of cutting and rapid movements
 - **Authentication**: Secure login system using Auth0 with 3-day token validity
 - **Utility Functions**: Helper methods for geometry operations and plane interpolation
+- **Toolpath Optimization**: Tolerance-based simplification plus nearest-neighbor and 2-opt travel reduction
 
 ## Components
 
@@ -43,7 +44,12 @@ TU Tools is a Grasshopper plugin that provides CNC machining capabilities for Rh
   - Input: Toolpath points, rapid threshold, safe height
   - Output: Validation status, issue list, statistics
   - Checks: Rapid movements, path continuity, negative Z values
-  
+
+- **Optimize Toolpath**: Simplify and shorten toolpaths
+  - Input: Toolpath points, tolerance (mm), optimize order toggle, max iterations
+  - Output: Optimized points, removed point count, original vs optimized length, percentage improvement
+  - Algorithms: Tolerance filtering, nearest-neighbor ordering, 2-opt refinement
+
 - **G-Code Preview**: Visualize toolpaths with color-coded movements
   - Input: Toolpath points, rapid threshold
   - Output: Cutting moves (green), rapid moves (red), statistics
@@ -133,6 +139,10 @@ Points → Validate → Issues, Statistics
 Points → G-Code Preview → Visual toolpath, Time estimate
          ↓
       Display settings
+
+Points → Optimize → File / Preview / Validate
+         ↓
+     Tolerance, Order
 ```
 
 ## Code Structure
@@ -173,6 +183,25 @@ TUTools/
 - Grasshopper SDK
 - Auth0.OidcClient.WPF (2.4.3)
 - Newtonsoft.Json (11.0.1)
+
+## Mathematics
+
+- **Feed conversion**: CAM feed is specified in mm/s in the UI and converted to G-code mm/min via \(F_{\text{mm/min}} = 60 \times v_{\text{mm/s}}\).
+- **Polyline length**: Toolpath length is computed as \(L = \sum_{i=1}^{n-1} \lVert p_i - p_{i-1} \rVert_2\).
+- **2-opt edge swap**: The optimizer evaluates the change in length \(\Delta = \bigl\|a-c\bigr\|_2 + \bigl\|b-d\bigr\|_2 - \bigl\|a-b\bigr\|_2 - \bigl\|c-d\bigr\|_2\) when swapping edges \((a,b)\) and \((c,d)\); swaps are accepted when \(\Delta < 0\) to shorten the path.
+- **Tolerance filtering**: Points closer than the user tolerance \( \varepsilon \) are removed to prevent redundant micro-moves that add time without affecting geometry.
+
+## MSI Installer (packaging guidance)
+
+An MSI simplifies deployment in campus labs. A minimal path to produce one on Windows:
+
+1. Install the **Visual Studio Installer Projects** extension.
+2. Add a *Setup Project* to the solution and include `TUTools.dll` (built in Release), the generated `TUTools.gha`, and icons/resources.
+3. Set the target folder to `%AppData%\\Grasshopper\\Libraries\\TU Tools\\`.
+4. Add a custom action to unblock the `.gha` on install (PowerShell `Unblock-File` or `certutil -setreg ...` if group policy blocks it).
+5. Build the Setup Project in Release to produce `TUTools.msi`.
+
+If you prefer WiX, create a basic bundle with `<Directory Id="GrasshopperLibraries" Name="Libraries">` under the `%AppData%` Grasshopper path and add file components for `TUTools.gha` plus required DLLs.
 
 ## G-Code Reference
 
