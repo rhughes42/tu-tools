@@ -1,0 +1,22 @@
+{
+  "name": "tu-tools-cnc-ts",
+  "version": "1.0.0",
+  "description": "TypeScript helpers for CNC workflows (tool configs, layout, calibration, time estimation).",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build"
+  },
+  "keywords": [
+    "cnc",
+    "gcode",
+    "toolpath",
+    "tu-tools"
+  ],
+  "author": "TU Tools",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "typescript": "^6.0.2"
+  }
+}
