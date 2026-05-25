@@ -1,14 +1,13 @@
-# TU Tools CNC TypeScript Package
+# TypeScript CNC Toolkit
 
-TypeScript utilities that mirror the Grasshopper CNC helpers: layout planning, calibration offsets, tool configuration headers, custom command rendering, and physics-based cut time estimation.
+TypeScript adapter for modular CNC workflows.
 
-## Install
+## Modules
 
-```bash
-cd typescript
-npm install
-npm run build
-```
+- `core/`: calibration, layout, sequencing, validation, time estimation, program transforms
+- `machineProfiles/`: pluggable profile model + `hundegger` profile
+- `adapters/`: export adapters (`plain`, `json`)
+- `observability/`: structured telemetry + Sentry-compatible sink
 
 ## Usage
 
@@ -16,45 +15,18 @@ npm run build
 import {
   applyCalibration,
   layoutPoints,
-  renderCustomCommand,
+  sequenceNearestNeighbor,
+  validateToolpath,
   estimateTime,
-  summarizeTime,
   toolHeader,
-  Point,
+  addLineNumbers,
+  resolveMachineProfile,
+  resolveExportAdapter,
+  TelemetryClient,
+  ConsoleTelemetrySink,
 } from "tu-tools-cnc-ts";
-
-const path: Point[] = [
-  { x: 0, y: 0, z: 0 },
-  { x: 200, y: 0, z: -3 },
-  { x: 200, y: 80, z: -3 },
-];
-
-const calibrated = applyCalibration(path, { offsetX: 5, offsetY: 10, rotationDeg: 3, scale: 1 });
-const laidOut = layoutPoints(calibrated, "grid", { rows: 2, cols: 2, spacingX: 250, spacingY: 120 });
-
-const time = estimateTime(laidOut, {
-  cutFeed: 2800,
-  rapidFeed: 8000,
-  acceleration: 1800,
-  mass: 90,
-  inertia: 0.02,
-  rapidThreshold: 35,
-  spinupSeconds: 3,
-});
-
-console.log(summarizeTime(time));
-console.log(toolHeader({
-  toolNumber: 3,
-  diameter: 6,
-  length: 50,
-  spindleRpm: 16000,
-  feedRate: 2800,
-  plungeRate: 700,
-  material: "Birch Ply",
-  coolant: true,
-}));
-
-console.log(renderCustomCommand("G1 X{X} Y{Y} Z{Z} F{F}", { X: 120, Y: 45, Z: -2, F: 2400 }));
 ```
 
-The `estimateTime` helper uses a trapezoidal velocity profile with an acceleration reduced by mass and inertia to approximate real-world motion time for cutting versus rapid moves.
+## Performance baseline helper
+
+Use `runPerformanceBaseline(path, options, iterations)` to produce a simple runtime baseline for regressions.
