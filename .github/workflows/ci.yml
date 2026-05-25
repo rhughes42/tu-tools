@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  typescript:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: /home/runner/work/tu-tools/tu-tools/typescript
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: /home/runner/work/tu-tools/tu-tools/typescript/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet build /home/runner/work/tu-tools/tu-tools/cli/cnc-cli.csproj
+
+  perf-gate:
+    runs-on: ubuntu-latest
+    needs: [cli]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Run CLI performance baseline
+        run: |
+          out=$(dotnet run --project /home/runner/work/tu-tools/tu-tools/cli/cnc-cli.csproj -- --benchmark true --perfIterations 8000)
+          echo "$out"
+          seconds=$(echo "$out" | awk -F': ' '/BenchmarkSeconds/ {print $2}' | tail -n1)
+          max=3.0
+          awk -v s="$seconds" -v m="$max" 'BEGIN { if (s+0 > m+0) { exit 1 } }'

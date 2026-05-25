@@ -1,151 +1,35 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.applyCalibration = applyCalibration;
-exports.layoutPoints = layoutPoints;
-exports.renderCustomCommand = renderCustomCommand;
-exports.toolHeader = toolHeader;
-exports.estimateTime = estimateTime;
-exports.summarizeTime = summarizeTime;
-function applyCalibration(pts, offset) {
-    var _a, _b, _c, _d, _e;
-    const ox = (_a = offset.x) !== null && _a !== void 0 ? _a : 0;
-    const oy = (_b = offset.y) !== null && _b !== void 0 ? _b : 0;
-    const oz = (_c = offset.z) !== null && _c !== void 0 ? _c : 0;
-    const rotation = (((_d = offset.rotationDeg) !== null && _d !== void 0 ? _d : 0) * Math.PI) / 180;
-    const scale = (_e = offset.scale) !== null && _e !== void 0 ? _e : 1;
-    const cos = Math.cos(rotation) * scale;
-    const sin = Math.sin(rotation) * scale;
-    return pts.map((p) => ({
-        x: p.x * cos - p.y * sin + ox,
-        y: p.x * sin + p.y * cos + oy,
-        z: p.z * scale + oz,
-    }));
-}
-function layoutPoints(pts, strategy, options = {}) {
-    var _a, _b, _c, _d;
-    const rows = Math.max(1, (_a = options.rows) !== null && _a !== void 0 ? _a : 1);
-    const cols = Math.max(1, (_b = options.cols) !== null && _b !== void 0 ? _b : 1);
-    const sx = (_c = options.spacingX) !== null && _c !== void 0 ? _c : 0;
-    const sy = (_d = options.spacingY) !== null && _d !== void 0 ? _d : 0;
-    switch (strategy) {
-        case "grid":
-            return grid(pts, rows, cols, sx, sy);
-        case "mirrorX":
-            return mirror(pts, true);
-        case "mirrorY":
-            return mirror(pts, false);
-        case "rotate90":
-            return rotate(pts, 90);
-        case "rotate180":
-            return rotate(pts, 180);
-        case "rotate270":
-            return rotate(pts, 270);
-        case "none":
-        default:
-            return pts;
-    }
-}
-function renderCustomCommand(template, parameters) {
-    return Object.keys(parameters).reduce((cmd, key) => {
-        return cmd.replace(new RegExp(`\\{${key}\\}`, "g"), String(parameters[key]));
-    }, template);
-}
-function toolHeader(cfg) {
-    const lines = [
-        `( Tool ${cfg.toolNumber} | Dia ${cfg.diameter.toFixed(2)}mm | ${cfg.material} )`,
-        `T${cfg.toolNumber} M06`,
-        `S${cfg.spindleRpm.toFixed(0)} M03`,
-        `F${cfg.feedRate.toFixed(1)}`,
-        `( Plunge ${cfg.plungeRate.toFixed(1)} mm/min )`,
-    ];
-    if (cfg.coolant)
-        lines.push("M08");
-    return lines;
-}
-function estimateTime(path, options) {
-    var _a, _b;
-    if (path.length < 2) {
-        return { cuttingSeconds: 0, rapidSeconds: 0, spinupSeconds: (_a = options.spinupSeconds) !== null && _a !== void 0 ? _a : 3, distance: 0, totalSeconds: 0 };
-    }
-    const accel = options.acceleration / Math.max(0.5, 1 + options.mass * options.inertia);
-    let cutting = 0;
-    let rapids = 0;
-    let distance = 0;
-    for (let i = 1; i < path.length; i++) {
-        const a = path[i - 1];
-        const b = path[i];
-        const d = distanceTo(a, b);
-        distance += d;
-        const isRapid = d >= options.rapidThreshold || a.z < b.z;
-        const feed = (isRapid ? options.rapidFeed : options.cutFeed) / 60;
-        const accelTime = feed / accel;
-        const accelDist = 0.5 * accel * accelTime * accelTime;
-        let segment;
-        if (2 * accelDist >= d) {
-            segment = 2 * Math.sqrt(d / accel);
-        }
-        else {
-            const cruise = d - 2 * accelDist;
-            segment = 2 * accelTime + cruise / feed;
-        }
-        if (isRapid)
-            rapids += segment;
-        else
-            cutting += segment;
-    }
-    const spin = Math.max(0, (_b = options.spinupSeconds) !== null && _b !== void 0 ? _b : 3);
-    return {
-        cuttingSeconds: cutting,
-        rapidSeconds: rapids,
-        spinupSeconds: spin,
-        distance,
-        totalSeconds: cutting + rapids + spin,
-    };
-}
-function summarizeTime(est) {
-    return [
-        `Distance: ${est.distance.toFixed(2)} mm`,
-        `Cutting: ${est.cuttingSeconds.toFixed(2)} s`,
-        `Rapids: ${est.rapidSeconds.toFixed(2)} s`,
-        `Spin-up: ${est.spinupSeconds.toFixed(2)} s`,
-        `Total: ${est.totalSeconds.toFixed(2)} s`,
-    ];
-}
-// Helpers
-function distanceTo(a, b) {
-    const dx = a.x - b.x;
-    const dy = a.y - b.y;
-    const dz = a.z - b.z;
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
-}
-function grid(pts, rows, cols, sx, sy) {
-    const result = [];
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            const dx = c * sx;
-            const dy = r * sy;
-            pts.forEach((p) => result.push({ x: p.x + dx, y: p.y + dy, z: p.z }));
-        }
-    }
-    return result;
-}
-function mirror(pts, mirrorX) {
-    return [
-        ...pts,
-        ...pts.map((p) => ({
-            x: mirrorX ? -p.x : p.x,
-            y: mirrorX ? p.y : -p.y,
-            z: p.z,
-        })),
-    ];
-}
-function rotate(pts, deg) {
-    const rad = (deg * Math.PI) / 180;
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-    return pts.map((p) => ({
-        x: p.x * cos - p.y * sin,
-        y: p.x * sin + p.y * cos,
-        z: p.z,
-    }));
-}
+exports.renderCustomCommand = exports.TelemetryClient = exports.SentryCompatibleTelemetrySink = exports.ConsoleTelemetrySink = exports.resolveExportAdapter = exports.jsonSimulationExportAdapter = exports.plainExportAdapter = exports.resolveMachineProfile = exports.hundeggerProfile = exports.toolHeader = exports.renderCustomCommandSafe = exports.addLineNumbers = exports.normalizeCommands = exports.runPerformanceBaseline = exports.summarizeTime = exports.estimateTime = exports.validateToolpath = exports.sequenceNearestNeighbor = exports.layoutPoints = exports.applyCalibration = void 0;
+var calibration_1 = require("./core/calibration");
+Object.defineProperty(exports, "applyCalibration", { enumerable: true, get: function () { return calibration_1.applyCalibration; } });
+var layout_1 = require("./core/layout");
+Object.defineProperty(exports, "layoutPoints", { enumerable: true, get: function () { return layout_1.layoutPoints; } });
+var sequencing_1 = require("./core/sequencing");
+Object.defineProperty(exports, "sequenceNearestNeighbor", { enumerable: true, get: function () { return sequencing_1.sequenceNearestNeighbor; } });
+var validation_1 = require("./core/validation");
+Object.defineProperty(exports, "validateToolpath", { enumerable: true, get: function () { return validation_1.validateToolpath; } });
+var time_1 = require("./core/time");
+Object.defineProperty(exports, "estimateTime", { enumerable: true, get: function () { return time_1.estimateTime; } });
+Object.defineProperty(exports, "summarizeTime", { enumerable: true, get: function () { return time_1.summarizeTime; } });
+Object.defineProperty(exports, "runPerformanceBaseline", { enumerable: true, get: function () { return time_1.runPerformanceBaseline; } });
+var programTransforms_1 = require("./core/programTransforms");
+Object.defineProperty(exports, "normalizeCommands", { enumerable: true, get: function () { return programTransforms_1.normalizeCommands; } });
+Object.defineProperty(exports, "addLineNumbers", { enumerable: true, get: function () { return programTransforms_1.addLineNumbers; } });
+Object.defineProperty(exports, "renderCustomCommandSafe", { enumerable: true, get: function () { return programTransforms_1.renderCustomCommandSafe; } });
+Object.defineProperty(exports, "toolHeader", { enumerable: true, get: function () { return programTransforms_1.toolHeader; } });
+var hundegger_1 = require("./machineProfiles/hundegger");
+Object.defineProperty(exports, "hundeggerProfile", { enumerable: true, get: function () { return hundegger_1.hundeggerProfile; } });
+var registry_1 = require("./machineProfiles/registry");
+Object.defineProperty(exports, "resolveMachineProfile", { enumerable: true, get: function () { return registry_1.resolveMachineProfile; } });
+var exportAdapters_1 = require("./adapters/exportAdapters");
+Object.defineProperty(exports, "plainExportAdapter", { enumerable: true, get: function () { return exportAdapters_1.plainExportAdapter; } });
+Object.defineProperty(exports, "jsonSimulationExportAdapter", { enumerable: true, get: function () { return exportAdapters_1.jsonSimulationExportAdapter; } });
+Object.defineProperty(exports, "resolveExportAdapter", { enumerable: true, get: function () { return exportAdapters_1.resolveExportAdapter; } });
+var telemetry_1 = require("./observability/telemetry");
+Object.defineProperty(exports, "ConsoleTelemetrySink", { enumerable: true, get: function () { return telemetry_1.ConsoleTelemetrySink; } });
+Object.defineProperty(exports, "SentryCompatibleTelemetrySink", { enumerable: true, get: function () { return telemetry_1.SentryCompatibleTelemetrySink; } });
+Object.defineProperty(exports, "TelemetryClient", { enumerable: true, get: function () { return telemetry_1.TelemetryClient; } });
+// Backward-compatible alias for existing API name.
+var programTransforms_2 = require("./core/programTransforms");
+Object.defineProperty(exports, "renderCustomCommand", { enumerable: true, get: function () { return programTransforms_2.renderCustomCommandSafe; } });
