@@ -1,10 +1,11 @@
+/* Axis CNC GCodePreview source. */
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that visualizes G-code toolpaths with color-coded movements.
@@ -54,7 +55,7 @@ namespace TUTools.CNC
         public GCodePreview()
           : base("G-Code Preview", "Preview",
               "Visualize G-code toolpaths with color-coded cutting and rapid movements.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 

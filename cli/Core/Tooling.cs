@@ -1,3 +1,4 @@
+/* Axis CNC Tooling CLI source. */
 using System.Globalization;
 
 namespace CncCli.Core;

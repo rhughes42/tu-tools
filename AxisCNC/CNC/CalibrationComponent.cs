@@ -1,9 +1,10 @@
+/* Axis CNC calibration component. */
 using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that applies calibration offsets (translation, rotation, scale) to a toolpath.
@@ -13,16 +14,20 @@ namespace TUTools.CNC
         private const double DefaultRotation = 0.0;
         private const double DefaultScale = 1.0;
 
+        /// <summary>
+        /// Initializes a new instance of the calibration component.
+        /// </summary>
         public CalibrationComponent()
           : base("Calibration Offsets", "Calibrate",
               "Apply calibration offsets to a toolpath (translation, rotation, scale).",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 
         /// <summary>
         /// Registers all input parameters for this component.
         /// </summary>
+        /// <param name="pManager">The input parameter manager.</param>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddPointParameter("Toolpath", "Pts", "Points describing the toolpath.", GH_ParamAccess.list);
@@ -41,6 +46,7 @@ namespace TUTools.CNC
         /// <summary>
         /// Registers all output parameters for this component.
         /// </summary>
+        /// <param name="pManager">The output parameter manager.</param>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddPointParameter("Calibrated", "Cal", "Calibrated toolpath.", GH_ParamAccess.list);
@@ -50,6 +56,7 @@ namespace TUTools.CNC
         /// <summary>
         /// Applies the calibration offsets to the incoming toolpath.
         /// </summary>
+        /// <param name="DA">The Grasshopper data access object.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             List<Point3d> toolpath = new List<Point3d>();

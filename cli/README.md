@@ -12,7 +12,7 @@ Lightweight command-line adapter for CNC fabrication workflows with modular arch
 ## Quick start
 
 ```bash
-dotnet run --project /home/runner/work/tu-tools/tu-tools/cli/cnc-cli.csproj -- \
+dotnet run --project /home/runner/work/axis-cnc/axis-cnc/cli/cnc-cli.csproj -- \
   --points "0,0,0;200,0,-3;200,80,-3" \
   --layout grid --rows 2 --cols 2 --spacingX 250 --spacingY 120 \
   --toolNumber 3 --diameter 6 --rpm 16000 --feed 2800 --plunge 700 --material "Birch Ply" --coolant true \

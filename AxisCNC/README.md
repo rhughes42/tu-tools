@@ -1,4 +1,4 @@
-# TU Tools CNC (Grasshopper)
+# Axis CNC (Grasshopper)
 
 This plugin now ships additional CNC helpers focused on fabrication setup:
 
@@ -8,4 +8,4 @@ This plugin now ships additional CNC helpers focused on fabrication setup:
 - **Custom Command** – token-based templating for bespoke G-code lines.
 - **Cut Time (Physics)** – estimate time using travel distance, acceleration, mass/inertia, and rapid classification.
 
-All components sit in the `CNC` tab inside the **TU Tools** category. The physics estimator uses a trapezoidal profile and reduces acceleration based on provided mass/inertia to approximate real machine behavior.
+All components sit in the `CNC` tab inside the **Axis CNC** category. The physics estimator uses a trapezoidal profile and reduces acceleration based on provided mass/inertia to approximate real machine behavior.

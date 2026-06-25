@@ -1,3 +1,4 @@
+/* Axis CNC Transforms CLI source. */
 namespace CncCli.Core;
 
 internal static class Calibration

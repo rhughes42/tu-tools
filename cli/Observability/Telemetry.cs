@@ -1,3 +1,4 @@
+/* Axis CNC Telemetry CLI source. */
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 

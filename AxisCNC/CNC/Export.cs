@@ -1,12 +1,13 @@
-﻿using System;
+﻿/* Axis CNC Export source. */
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Grasshopper.Kernel;
 
-using static TUTools.Properties.Settings;
+using static AxisCNC.Properties.Settings;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that exports CNC programs to Axiom machine file format (.mmg).
@@ -45,7 +46,7 @@ namespace TUTools.CNC
         public Export()
           : base("Export", "Export",
               "Export the program as an Axiom file.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 
@@ -125,7 +126,7 @@ namespace TUTools.CNC
                     
                     using (StreamWriter mainProc = new StreamWriter(fullPath, false))
                     {
-                        mainProc.WriteLine("( TU Tools )");
+                        mainProc.WriteLine("( Axis CNC )");
                         mainProc.WriteLine("( Axis Consulting for Technical University Dublin )");
                         mainProc.WriteLine("( Contact rhu@axisarch.tech )");
                         mainProc.WriteLine("( --- )");

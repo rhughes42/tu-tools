@@ -1,9 +1,10 @@
+/* Axis CNC toolpath optimization component. */
 using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that shortens and simplifies toolpaths using tolerance filtering,
@@ -15,13 +16,20 @@ namespace TUTools.CNC
         private const int DefaultIterations = 50;
         private const double TwoOptEpsilon = 1e-6;
 
+        /// <summary>
+        /// Initializes a new instance of the optimize toolpath component.
+        /// </summary>
         public OptimizeToolpath()
           : base("Optimize Toolpath", "Optimize",
               "Reduce small moves and optionally reorder points to shorten travel distance.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 
+        /// <summary>
+        /// Registers all input parameters for this component.
+        /// </summary>
+        /// <param name="pManager">The input parameter manager.</param>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddPointParameter("Toolpath", "Pts", "Points describing the toolpath polyline.", GH_ParamAccess.list);
@@ -33,6 +41,10 @@ namespace TUTools.CNC
             pManager[3].Optional = true;
         }
 
+        /// <summary>
+        /// Registers all output parameters for this component.
+        /// </summary>
+        /// <param name="pManager">The output parameter manager.</param>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddPointParameter("Optimized", "Opt", "Optimized toolpath.", GH_ParamAccess.list);
@@ -42,6 +54,10 @@ namespace TUTools.CNC
             pManager.AddNumberParameter("Improvement (%)", "Delta%", "Relative reduction ((L0 - L1) / L0 * 100).", GH_ParamAccess.item);
         }
 
+        /// <summary>
+        /// Optimizes the incoming toolpath and returns summary statistics.
+        /// </summary>
+        /// <param name="DA">The Grasshopper data access object.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             List<Point3d> toolpath = new List<Point3d>();
@@ -90,6 +106,13 @@ namespace TUTools.CNC
             DA.SetData(4, improvement);
         }
 
+        /// <summary>
+        /// Removes moves shorter than the tolerance threshold.
+        /// </summary>
+        /// <param name="path">The source path.</param>
+        /// <param name="tolerance">The minimum distance to keep.</param>
+        /// <param name="removedCount">The number of removed points.</param>
+        /// <returns>The filtered toolpath.</returns>
         private static List<Point3d> ReduceNoise(IReadOnlyList<Point3d> path, double tolerance, out int removedCount)
         {
             removedCount = 0;
@@ -118,6 +141,12 @@ namespace TUTools.CNC
             return filtered;
         }
 
+        /// <summary>
+        /// Applies a nearest-neighbor pass and 2-opt refinement.
+        /// </summary>
+        /// <param name="path">The filtered path.</param>
+        /// <param name="maxIterations">The maximum number of 2-opt passes.</param>
+        /// <returns>The reordered path.</returns>
         private static List<Point3d> ImproveOrder(IReadOnlyList<Point3d> path, int maxIterations)
         {
             List<Point3d> ordered = NearestNeighbor(path);
@@ -125,6 +154,11 @@ namespace TUTools.CNC
             return ordered;
         }
 
+        /// <summary>
+        /// Orders points by repeatedly choosing the nearest remaining point.
+        /// </summary>
+        /// <param name="path">The source path.</param>
+        /// <returns>The nearest-neighbor ordering.</returns>
         private static List<Point3d> NearestNeighbor(IReadOnlyList<Point3d> path)
         {
             List<Point3d> remaining = new List<Point3d>(path.Count);
@@ -159,6 +193,11 @@ namespace TUTools.CNC
             return ordered;
         }
 
+        /// <summary>
+        /// Improves the order using a 2-opt swap pass.
+        /// </summary>
+        /// <param name="path">The path to refine.</param>
+        /// <param name="maxIterations">The maximum number of iterations.</param>
         private static void TwoOpt(List<Point3d> path, int maxIterations)
         {
             if (path.Count < 4 || maxIterations == 0) return;
@@ -186,6 +225,13 @@ namespace TUTools.CNC
             }
         }
 
+        /// <summary>
+        /// Calculates the change in path length from a 2-opt swap.
+        /// </summary>
+        /// <param name="path">The current path.</param>
+        /// <param name="i">The first swap index.</param>
+        /// <param name="j">The second swap index.</param>
+        /// <returns>The delta length for the swap.</returns>
         private static double DeltaTwoOpt(IReadOnlyList<Point3d> path, int i, int j)
         {
             Point3d a = path[i - 1];
@@ -199,6 +245,12 @@ namespace TUTools.CNC
             return after - before;
         }
 
+        /// <summary>
+        /// Reverses a path segment in place.
+        /// </summary>
+        /// <param name="path">The path to update.</param>
+        /// <param name="start">The segment start index.</param>
+        /// <param name="end">The segment end index.</param>
         private static void ReverseSegment(List<Point3d> path, int start, int end)
         {
             while (start < end)
@@ -211,6 +263,11 @@ namespace TUTools.CNC
             }
         }
 
+        /// <summary>
+        /// Measures the total polyline length.
+        /// </summary>
+        /// <param name="path">The path to measure.</param>
+        /// <returns>The total length in millimetres.</returns>
         private static double PathLength(IReadOnlyList<Point3d> path)
         {
             double length = 0.0;

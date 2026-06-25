@@ -1,15 +1,16 @@
-﻿using System.Reflection;
+﻿/* Axis CNC AssemblyInfo source. */
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TU Tools")]
+[assembly: AssemblyTitle("Axis CNC")]
 [assembly: AssemblyDescription("Fabrication tools for Technical University Dublin by Axis Consulting.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Axis Consulting")]
-[assembly: AssemblyProduct("TU Tools")]
+[assembly: AssemblyProduct("Axis CNC")]
 [assembly: AssemblyCopyright("Copyright Axis © 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

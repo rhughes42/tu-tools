@@ -1,3 +1,4 @@
+/* Axis CNC Profiles CLI source. */
 namespace CncCli.MachineProfiles;
 
 internal interface IMachineProfile

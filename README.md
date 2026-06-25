@@ -1,4 +1,4 @@
-# TU Tools
+# Axis CNC
 
 Fabrication tools for Technical University Dublin by Axis Consulting.
 
@@ -13,16 +13,16 @@ This repository now includes a modular migration architecture designed for reint
 - CI performance baseline gate
 
 See:
-- `/home/runner/work/tu-tools/tu-tools/docs/axis-integration-scope.md`
-- `/home/runner/work/tu-tools/tu-tools/docs/parity-baseline.md`
-- `/home/runner/work/tu-tools/tu-tools/docs/architecture.md`
+- `/home/runner/work/axis-cnc/axis-cnc/docs/axis-integration-scope.md`
+- `/home/runner/work/axis-cnc/axis-cnc/docs/parity-baseline.md`
+- `/home/runner/work/axis-cnc/axis-cnc/docs/architecture.md`
 
 ## Repository structure
 
-- `/home/runner/work/tu-tools/tu-tools/TUTools`: Grasshopper plugin (.NET Framework)
-- `/home/runner/work/tu-tools/tu-tools/cli`: modular .NET CLI adapter
-- `/home/runner/work/tu-tools/tu-tools/typescript`: modular TypeScript adapter package
-- `/home/runner/work/tu-tools/tu-tools/docs`: parity, architecture, config, runbook, release docs
+- `/home/runner/work/axis-cnc/axis-cnc/AxisCNC`: Grasshopper plugin (.NET Framework)
+- `/home/runner/work/axis-cnc/axis-cnc/cli`: modular .NET CLI adapter
+- `/home/runner/work/axis-cnc/axis-cnc/typescript`: modular TypeScript adapter package
+- `/home/runner/work/axis-cnc/axis-cnc/docs`: parity, architecture, config, runbook, release docs
 
 ## Capability packs implemented
 

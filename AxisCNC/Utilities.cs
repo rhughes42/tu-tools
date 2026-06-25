@@ -1,4 +1,5 @@
-﻿using System;
+﻿/* Axis CNC Utilities source. */
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -9,7 +10,7 @@ using Rhino.Geometry;
 
 using static System.Math;
 
-namespace TUTools
+namespace AxisCNC
 {
     /// <summary>
     /// Utility class containing helper methods for geometry operations and UI interactions.
