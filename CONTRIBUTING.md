@@ -9,8 +9,8 @@
 
 ## Local verification
 
-- TypeScript: `cd /home/runner/work/tu-tools/tu-tools/typescript && npm test`
-- CLI: `dotnet build /home/runner/work/tu-tools/tu-tools/cli/cnc-cli.csproj`
+- TypeScript: `cd /home/runner/work/axis-cnc/axis-cnc/typescript && npm test`
+- CLI: `dotnet build /home/runner/work/axis-cnc/axis-cnc/cli/cnc-cli.csproj`
 
 ## Pull requests
 

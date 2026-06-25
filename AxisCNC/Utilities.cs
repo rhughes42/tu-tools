@@ -9,7 +9,7 @@ using Rhino.Geometry;
 
 using static System.Math;
 
-namespace TUTools
+namespace AxisCNC
 {
     /// <summary>
     /// Utility class containing helper methods for geometry operations and UI interactions.

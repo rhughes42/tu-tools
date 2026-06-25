@@ -1,8 +1,9 @@
+/* Axis CNC tool configuration component. */
 using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that bundles tool configuration parameters and emits helper G-code header lines.
@@ -16,16 +17,20 @@ namespace TUTools.CNC
         private const double DefaultFeed = 2400.0;
         private const double DefaultPlunge = 600.0;
 
+        /// <summary>
+        /// Initializes a new instance of the tool configuration component.
+        /// </summary>
         public ToolConfiguratorComponent()
           : base("Tool Configuration", "ToolCfg",
               "Define tool parameters (number, diameter, rpm, feeds) and emit helper headers.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 
         /// <summary>
         /// Registers all input parameters for this component.
         /// </summary>
+        /// <param name="pManager">The input parameter manager.</param>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddIntegerParameter("Tool Number", "T", "Tool number (T code).", GH_ParamAccess.item, DefaultToolNumber);
@@ -49,6 +54,7 @@ namespace TUTools.CNC
         /// <summary>
         /// Registers all output parameters for this component.
         /// </summary>
+        /// <param name="pManager">The output parameter manager.</param>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("Summary", "Summary", "Human-readable summary.", GH_ParamAccess.item);
@@ -59,6 +65,7 @@ namespace TUTools.CNC
         /// <summary>
         /// Builds the tool configuration and header lines.
         /// </summary>
+        /// <param name="DA">The Grasshopper data access object.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             int toolNumber = DefaultToolNumber;

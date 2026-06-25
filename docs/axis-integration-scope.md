@@ -18,6 +18,6 @@ This repository is being prepared for reintegration into the Axis robotics frame
 
 ## Success criteria
 
-- Functional parity with existing TU Tools capabilities.
+- Functional parity with existing Axis CNC capabilities.
 - Observability parity (Sentry-compatible telemetry + contextual diagnostics).
 - Documentation, CI, and release process parity with larger Axis repositories.

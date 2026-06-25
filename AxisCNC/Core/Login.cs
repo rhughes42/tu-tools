@@ -5,12 +5,12 @@ using System.Diagnostics;
 using Grasshopper.Kernel;
 
 using Auth0.OidcClient;
-using static TUTools.Properties.Settings;
+using static AxisCNC.Properties.Settings;
 
-namespace TUTools.Core
+namespace AxisCNC.Core
 {
     /// <summary>
-    /// Grasshopper component that handles user authentication for TU Tools using Auth0.
+    /// Grasshopper component that handles user authentication for Axis CNC using Auth0.
     /// Requires a DIT email address for login and provides a 3-day authentication token.
     /// </summary>
     public class Login : GH_Component
@@ -55,8 +55,8 @@ namespace TUTools.Core
         /// </summary>
         public Login()
           : base("Login", "Login",
-              "Login to TU Tools using a DIT email address.",
-              "TU Tools", "Core")
+              "Login to Axis CNC using a DIT email address.",
+              "Axis CNC", "Core")
         {
         }
 

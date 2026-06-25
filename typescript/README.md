@@ -24,7 +24,7 @@ import {
   resolveExportAdapter,
   TelemetryClient,
   ConsoleTelemetrySink,
-} from "tu-tools-cnc-ts";
+} from "axis-cnc-cnc-ts";
 ```
 
 ## Performance baseline helper

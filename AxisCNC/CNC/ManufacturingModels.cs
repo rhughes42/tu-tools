@@ -1,10 +1,11 @@
+/* Axis CNC manufacturing data models and helpers. */
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Rhino.Geometry;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Supported CNC component and operation types.
@@ -40,6 +41,14 @@ namespace TUTools.CNC
     /// </summary>
     public class CalibrationOffset
     {
+        /// <summary>
+        /// Initializes a new instance of the calibration offset model.
+        /// </summary>
+        /// <param name="x">The X translation in millimetres.</param>
+        /// <param name="y">The Y translation in millimetres.</param>
+        /// <param name="z">The Z translation in millimetres.</param>
+        /// <param name="rotationDegrees">The rotation in degrees.</param>
+        /// <param name="scale">The uniform scale factor.</param>
         public CalibrationOffset(double x, double y, double z, double rotationDegrees, double scale)
         {
             X = x;
@@ -49,10 +58,29 @@ namespace TUTools.CNC
             Scale = scale;
         }
 
+        /// <summary>
+        /// Gets the X translation in millimetres.
+        /// </summary>
         public double X { get; }
+
+        /// <summary>
+        /// Gets the Y translation in millimetres.
+        /// </summary>
         public double Y { get; }
+
+        /// <summary>
+        /// Gets the Z translation in millimetres.
+        /// </summary>
         public double Z { get; }
+
+        /// <summary>
+        /// Gets the rotation in degrees.
+        /// </summary>
         public double RotationDegrees { get; }
+
+        /// <summary>
+        /// Gets the uniform scale factor.
+        /// </summary>
         public double Scale { get; }
 
         /// <summary>
@@ -83,6 +111,14 @@ namespace TUTools.CNC
     /// </summary>
     public class LayoutOptions
     {
+        /// <summary>
+        /// Initializes a new instance of the layout options model.
+        /// </summary>
+        /// <param name="strategy">The layout strategy.</param>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="columns">The number of columns.</param>
+        /// <param name="spacingX">The spacing in X.</param>
+        /// <param name="spacingY">The spacing in Y.</param>
         public LayoutOptions(LayoutStrategy strategy, int rows, int columns, double spacingX, double spacingY)
         {
             Strategy = strategy;
@@ -92,10 +128,29 @@ namespace TUTools.CNC
             SpacingY = spacingY;
         }
 
+        /// <summary>
+        /// Gets the layout strategy.
+        /// </summary>
         public LayoutStrategy Strategy { get; }
+
+        /// <summary>
+        /// Gets the row count used for grid layout.
+        /// </summary>
         public int Rows { get; }
+
+        /// <summary>
+        /// Gets the column count used for grid layout.
+        /// </summary>
         public int Columns { get; }
+
+        /// <summary>
+        /// Gets the X spacing in millimetres.
+        /// </summary>
         public double SpacingX { get; }
+
+        /// <summary>
+        /// Gets the Y spacing in millimetres.
+        /// </summary>
         public double SpacingY { get; }
 
         /// <summary>
@@ -177,6 +232,17 @@ namespace TUTools.CNC
     /// </summary>
     public class ToolConfiguration
     {
+        /// <summary>
+        /// Initializes a new instance of the tool configuration model.
+        /// </summary>
+        /// <param name="toolNumber">The tool number.</param>
+        /// <param name="diameter">The tool diameter in millimetres.</param>
+        /// <param name="length">The tool length in millimetres.</param>
+        /// <param name="spindleRpm">The spindle speed in revolutions per minute.</param>
+        /// <param name="feedRate">The feed rate in millimetres per minute.</param>
+        /// <param name="plungeRate">The plunge rate in millimetres per minute.</param>
+        /// <param name="material">The tool material annotation.</param>
+        /// <param name="coolantOn">A value indicating whether coolant is enabled.</param>
         public ToolConfiguration(int toolNumber, double diameter, double length, double spindleRpm, double feedRate, double plungeRate, string material, bool coolantOn)
         {
             ToolNumber = toolNumber;
@@ -235,6 +301,12 @@ namespace TUTools.CNC
     /// </summary>
     public class CustomCommandDefinition
     {
+        /// <summary>
+        /// Initializes a new instance of the custom command model.
+        /// </summary>
+        /// <param name="name">The display name.</param>
+        /// <param name="template">The command template.</param>
+        /// <param name="defaults">The default token values.</param>
         public CustomCommandDefinition(string name, string template, IDictionary<string, string> defaults = null)
         {
             Name = string.IsNullOrWhiteSpace(name) ? "Custom" : name.Trim();
@@ -242,13 +314,26 @@ namespace TUTools.CNC
             Defaults = defaults ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Gets the command name.
+        /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the command template.
+        /// </summary>
         public string Template { get; }
+
+        /// <summary>
+        /// Gets the default token values.
+        /// </summary>
         public IDictionary<string, string> Defaults { get; }
 
         /// <summary>
         /// Renders the command using supplied overrides (merged with defaults).
         /// </summary>
+        /// <param name="overrides">Optional token overrides.</param>
+        /// <returns>The rendered command text.</returns>
         public string Render(IDictionary<string, string> overrides = null)
         {
             if (string.IsNullOrWhiteSpace(Template))
@@ -279,6 +364,15 @@ namespace TUTools.CNC
     /// </summary>
     public class CutPhysicsOptions
     {
+        /// <summary>
+        /// Initializes a new instance of the cut physics options model.
+        /// </summary>
+        /// <param name="cutFeed">The feed rate during cutting.</param>
+        /// <param name="rapidFeed">The feed rate during rapid movement.</param>
+        /// <param name="acceleration">The maximum acceleration.</param>
+        /// <param name="massKg">The moving mass in kilograms.</param>
+        /// <param name="inertiaFactor">The inertia multiplier.</param>
+        /// <param name="rapidThreshold">The distance threshold for rapid moves.</param>
         public CutPhysicsOptions(double cutFeed, double rapidFeed, double acceleration, double massKg, double inertiaFactor, double rapidThreshold)
         {
             CutFeed = cutFeed;
@@ -318,12 +412,35 @@ namespace TUTools.CNC
     /// </summary>
     public class CutTimeEstimate
     {
+        /// <summary>
+        /// Gets or sets the estimated cutting time in seconds.
+        /// </summary>
         public double CuttingSeconds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the estimated rapid move time in seconds.
+        /// </summary>
         public double RapidSeconds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the spindle overhead time in seconds.
+        /// </summary>
         public double SpindleSeconds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total toolpath distance in millimetres.
+        /// </summary>
         public double TotalDistanceMm { get; set; }
+
+        /// <summary>
+        /// Gets the total estimated time in seconds.
+        /// </summary>
         public double TotalSeconds => CuttingSeconds + RapidSeconds + SpindleSeconds;
 
+        /// <summary>
+        /// Converts the estimate into a human-readable report.
+        /// </summary>
+        /// <returns>The formatted report lines.</returns>
         public IList<string> ToReport()
         {
             return new List<string>
@@ -349,6 +466,13 @@ namespace TUTools.CNC
     /// </summary>
     public static class CutTimeEstimator
     {
+        /// <summary>
+        /// Estimates time for a path using a simplified motion profile.
+        /// </summary>
+        /// <param name="path">The toolpath points.</param>
+        /// <param name="options">The physics options.</param>
+        /// <param name="spindleSpinUpSeconds">The spindle spin-up overhead in seconds.</param>
+        /// <returns>A populated time estimate.</returns>
         public static CutTimeEstimate EstimatePath(IReadOnlyList<Point3d> path, CutPhysicsOptions options, double spindleSpinUpSeconds = 3.0)
         {
             if (path == null || path.Count < 2)
@@ -393,6 +517,13 @@ namespace TUTools.CNC
             };
         }
 
+        /// <summary>
+        /// Computes the duration of a single move using a trapezoidal or triangular profile.
+        /// </summary>
+        /// <param name="distanceMm">The distance to travel.</param>
+        /// <param name="targetVelocityMmPerSec">The target velocity in millimetres per second.</param>
+        /// <param name="accelerationMmPerSec2">The acceleration in millimetres per second squared.</param>
+        /// <returns>The estimated segment time in seconds.</returns>
         private static double ComputeTrapezoidalTime(double distanceMm, double targetVelocityMmPerSec, double accelerationMmPerSec2)
         {
             double accelTime = targetVelocityMmPerSec / accelerationMmPerSec2;

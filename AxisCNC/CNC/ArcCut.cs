@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that generates G-code for circular arc movements (G02/G03).
@@ -37,7 +37,7 @@ namespace TUTools.CNC
         public ArcCut()
           : base("Arc Cut", "ArcCut",
               "Create arc cutting code from circles and arcs for smoother toolpaths.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 

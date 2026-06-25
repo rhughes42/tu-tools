@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 
-using static TUTools.Properties.Settings;
+using static AxisCNC.Properties.Settings;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that compiles individual CNC operations into a complete CNC program file.
@@ -34,7 +34,7 @@ namespace TUTools.CNC
         public Program()
           : base("File", "File",
               "Compile a CNC program from operations.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 

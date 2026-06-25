@@ -1,8 +1,9 @@
+/* Axis CNC physics-based time estimator component. */
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that estimates cut time using a simple physics model (acceleration, inertia, rapids vs cutting).
@@ -17,16 +18,20 @@ namespace TUTools.CNC
         private const double DefaultRapidThreshold = 30.0;
         private const double DefaultSpindleSpinup = 3.0;
 
+        /// <summary>
+        /// Initializes a new instance of the physics time estimator component.
+        /// </summary>
         public PhysicsTimeEstimatorComponent()
           : base("Cut Time (Physics)", "TimePhysics",
               "Estimate cut time using travel distance, acceleration, mass, and rapids.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 
         /// <summary>
         /// Registers all input parameters for this component.
         /// </summary>
+        /// <param name="pManager">The input parameter manager.</param>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddPointParameter("Toolpath", "Pts", "Toolpath points.", GH_ParamAccess.list);
@@ -47,6 +52,7 @@ namespace TUTools.CNC
         /// <summary>
         /// Registers all output parameters for this component.
         /// </summary>
+        /// <param name="pManager">The output parameter manager.</param>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddNumberParameter("Total (s)", "Total", "Total estimated time in seconds.", GH_ParamAccess.item);
@@ -58,6 +64,7 @@ namespace TUTools.CNC
         /// <summary>
         /// Performs the estimation.
         /// </summary>
+        /// <param name="DA">The Grasshopper data access object.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             List<Point3d> toolpath = new List<Point3d>();

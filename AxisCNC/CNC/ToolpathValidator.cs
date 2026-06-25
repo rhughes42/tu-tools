@@ -1,10 +1,11 @@
+/* Axis CNC toolpath validation component. */
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that validates toolpaths for potential issues.
@@ -30,10 +31,13 @@ namespace TUTools.CNC
         /// <summary>
         /// Initializes a new instance of the ToolpathValidator component.
         /// </summary>
+        /// <summary>
+        /// Initializes a new instance of the toolpath validator component.
+        /// </summary>
         public ToolpathValidator()
           : base("Validate Toolpath", "Validate",
               "Validate a toolpath for potential issues such as rapid movements and discontinuities.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 

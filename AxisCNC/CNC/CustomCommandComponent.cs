@@ -1,24 +1,29 @@
+/* Axis CNC custom command component. */
 using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that creates custom G-code commands using a tokenized template.
     /// </summary>
     public class CustomCommandComponent : GH_Component
     {
+        /// <summary>
+        /// Initializes a new instance of the custom command component.
+        /// </summary>
         public CustomCommandComponent()
           : base("Custom Command", "Command",
               "Create custom commands using a template and key/value pairs.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 
         /// <summary>
         /// Registers all input parameters for this component.
         /// </summary>
+        /// <param name="pManager">The input parameter manager.</param>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Name", "Name", "Name of the custom command.", GH_ParamAccess.item, "Custom");
@@ -32,6 +37,7 @@ namespace TUTools.CNC
         /// <summary>
         /// Registers all output parameters for this component.
         /// </summary>
+        /// <param name="pManager">The output parameter manager.</param>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("Command", "Cmd", "Expanded command.", GH_ParamAccess.item);
@@ -41,6 +47,7 @@ namespace TUTools.CNC
         /// <summary>
         /// Renders the custom command string.
         /// </summary>
+        /// <param name="DA">The Grasshopper data access object.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string name = "Custom";
@@ -61,6 +68,11 @@ namespace TUTools.CNC
             DA.SetData(1, definition);
         }
 
+        /// <summary>
+        /// Parses key-value pairs in the form <c>key=value</c>.
+        /// </summary>
+        /// <param name="pairs">The input lines to parse.</param>
+        /// <returns>A case-insensitive dictionary of parameter values.</returns>
         private static Dictionary<string, string> ParsePairs(IEnumerable<string> pairs)
         {
             Dictionary<string, string> map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

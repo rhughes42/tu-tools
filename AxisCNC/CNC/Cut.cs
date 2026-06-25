@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace TUTools.CNC
+namespace AxisCNC.CNC
 {
     /// <summary>
     /// Grasshopper component that generates CNC cutting code (G-code) from a list of points.
@@ -32,7 +32,7 @@ namespace TUTools.CNC
         public Cut()
           : base("Cut", "Cut",
               "Create cutting code from a list of points.",
-              "TU Tools", "CNC")
+              "Axis CNC", "CNC")
         {
         }
 

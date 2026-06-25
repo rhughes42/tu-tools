@@ -1,7 +1,7 @@
-# TU Tools - Code Review and Optimization Summary
+# Axis CNC - Code Review and Optimization Summary
 
 ## Overview
-This document summarizes the comprehensive review and optimization performed on the TU Tools repository.
+This document summarizes the comprehensive review and optimization performed on the Axis CNC repository.
 
 ## Changes Made
 
@@ -98,22 +98,22 @@ The codebase follows a clean architecture:
 - **Utilities**: Helper functions for geometry and UI
 
 ## Files Modified
-- TUTools/Utilities.cs
-- TUTools/CNC/Cut.cs
-- TUTools/CNC/Export.cs
-- TUTools/CNC/Program.cs
-- TUTools/Core/Login.cs
-- TUTools/TUTools.csproj
+- AxisCNC/Utilities.cs
+- AxisCNC/CNC/Cut.cs
+- AxisCNC/CNC/Export.cs
+- AxisCNC/CNC/Program.cs
+- AxisCNC/Core/Login.cs
+- AxisCNC/AxisCNC.csproj
 
 ## Files Added
 - README.md
-- TUTools/CNC/ArcCut.cs
-- TUTools/CNC/ToolpathValidator.cs
-- TUTools/CNC/GCodePreview.cs
+- AxisCNC/CNC/ArcCut.cs
+- AxisCNC/CNC/ToolpathValidator.cs
+- AxisCNC/CNC/GCodePreview.cs
 - SUMMARY.md (this file)
 
 ## Conclusion
-The TU Tools repository has been significantly improved with:
+The Axis CNC repository has been significantly improved with:
 - Enhanced code quality and maintainability
 - Comprehensive documentation
 - New features for better CNC workflow
