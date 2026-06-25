@@ -1,3 +1,4 @@
+/* Axis CNC Geometry CLI source. */
 namespace CncCli.Core;
 
 internal readonly record struct CncPoint(double X, double Y, double Z)

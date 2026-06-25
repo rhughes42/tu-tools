@@ -1,3 +1,4 @@
+/* Axis CNC ExportAdapters CLI source. */
 using System.Text.Json;
 using CncCli.Core;
 

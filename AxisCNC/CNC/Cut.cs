@@ -1,4 +1,5 @@
-﻿using System;
+﻿/* Axis CNC Cut source. */
+using System;
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;

@@ -1,3 +1,4 @@
+/* Axis CNC ProgramTransforms CLI source. */
 namespace CncCli.Core;
 
 internal static class ProgramTransforms

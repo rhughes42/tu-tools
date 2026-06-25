@@ -1,4 +1,5 @@
-﻿using System;
+﻿/* Axis CNC Utilities source. */
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;

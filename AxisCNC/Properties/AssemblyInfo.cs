@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿/* Axis CNC AssemblyInfo source. */
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

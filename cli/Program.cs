@@ -1,3 +1,4 @@
+/* Axis CNC Program CLI source. */
 using System.Globalization;
 using CncCli.Adapters;
 using CncCli.Core;
@@ -13,14 +14,14 @@ public static class Program
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
         var options = ParseArgs(args);
-        var environment = options.GetValueOrDefault("environment") ?? Environment.GetEnvironmentVariable("TU_ENVIRONMENT") ?? "dev";
-        var release = options.GetValueOrDefault("release") ?? Environment.GetEnvironmentVariable("TU_RELEASE") ?? "local";
+        var environment = options.GetValueOrDefault("environment") ?? Environment.GetEnvironmentVariable("AXIS_ENVIRONMENT") ?? "dev";
+        var release = options.GetValueOrDefault("release") ?? Environment.GetEnvironmentVariable("AXIS_RELEASE") ?? "local";
         var module = "cnc-cli";
 
         var telemetry = new TelemetryClient(
-            sampleRate: GetDouble(options, "sampleRate", GetDoubleFromEnv("TU_TELEMETRY_SAMPLE_RATE", 1.0)),
+            sampleRate: GetDouble(options, "sampleRate", GetDoubleFromEnv("AXIS_TELEMETRY_SAMPLE_RATE", 1.0)),
             new ConsoleTelemetrySink(),
-            new SentryCompatibleTelemetrySink(options.GetValueOrDefault("sentryDsn") ?? Environment.GetEnvironmentVariable("TU_SENTRY_DSN") ?? string.Empty));
+            new SentryCompatibleTelemetrySink(options.GetValueOrDefault("sentryDsn") ?? Environment.GetEnvironmentVariable("AXIS_SENTRY_DSN") ?? string.Empty));
 
         TelemetryContext ctx = new(environment, release, module);
         await telemetry.EmitAsync("info", "CLI started", ctx);

@@ -1,3 +1,4 @@
+/* Axis CNC ValidationAndTime CLI source. */
 namespace CncCli.Core;
 
 internal readonly record struct PhysicsOptions(

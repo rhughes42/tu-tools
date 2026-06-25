@@ -1,4 +1,4 @@
-# Axis CNC CNC (Grasshopper)
+# Axis CNC (Grasshopper)
 
 This plugin now ships additional CNC helpers focused on fabrication setup:
 
